@@ -1,0 +1,25 @@
+
+.gh {
+    display: inline-flex;
+}
+
+.fh {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    left: 500px;
+    padding: 10px;
+}
+
+.m-items {
+    display: flex;
+    flex-direction: column;
+}
+
+.m-items > input {
+    margin: 5px;
+}
+
+.anm {
+    padding: 10px;
+}

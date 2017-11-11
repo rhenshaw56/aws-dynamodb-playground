@@ -1,0 +1,46 @@
+<html>
+    <head>
+        <script type="text/javascript" src="./bundle.js"></script>
+        <script type="text/javascript"></script>
+        <link rel="stylesheet" href="./index.css"/>
+    </head>
+    <body>
+        <div class="gh">
+            <input id="createTableButton" type="button" value="Create Table" onclick=createMovies() />
+            <input type="file" id="fileinput" accept='application/json' />
+            <div class="fh">
+                    <h3>Create Movie</h3>
+                <div class="m-items" id="movie-info">
+                    <input id="movie-title" name="title" placeholder="Movie Title" />
+                    <input id="movie-year" name="year" placeholder="Movie Year" />
+                    <input id="movie-plot" name="plot" placeholder="Plot" />
+                    <input id="movie-director" name="director" placeholder="Director" />
+                    <input id="movie-rating" name="rating" placeholder="Rating" />
+                    <input id="movie-genre" name="genre" placeholder="Genre" />
+                </div>
+                <span class="anm">
+                        <input id="new-movie" type="button" value="Add Movie" onclick=addMovieItem() />
+                </span>
+
+            </div>
+            <div class="fh">
+                    <h3>Search</h3>
+                    <div class="s-items" id="movie-query">
+                        <input id="movie-title" name="title" placeholder="Movie Title" />
+                        <input id="movie-year" name="year" placeholder="Movie Year" />
+                    </div>
+                    <span class="anm">
+                            <input id="search-movie" type="button" value="Find Movies" onclick=findMovie() />
+                    </span>
+    
+                </div>
+        </div>
+
+        <br><br>
+        <textarea readonly id= "textarea" style="width:400px; height:800px; position: absolute; top: 50;"></textarea>
+        <script>
+            // const p = document.pro
+            document.getElementById('fileinput').addEventListener('change', document.downloadFile, false);
+        </script>
+    </body>
+</html>
