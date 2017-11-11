@@ -111,6 +111,7 @@ document.addMovieItem = function addMovieItem() {
             document.getElementById('textarea').innerHTML = "PutItem succeeded: " + "\n" + JSON.stringify(data, undefined, 2);
         } 
     });
+    
 }
 
 document.findMovie = function findMovie() {
@@ -144,6 +145,84 @@ document.findMovie = function findMovie() {
             document.getElementById('textarea').innerHTML = "Unable to read item: " + "\n" + JSON.stringify(err, undefined, 2);
         } else {
             document.getElementById('textarea').innerHTML = "GetItem succeeded: " + "\n" + JSON.stringify(data, undefined, 2);
+            formatForm(data);
         }
     })
+}
+
+document.updateMovieItem = function updateMovieItem() {
+    const formItems = document.getElementById('movie-info').children;
+    const items = Object.keys(formItems);
+    const Item = {};
+    const info = {};
+    const params = {
+        TableName: "Movies"
+    };
+    items.forEach((item) => {
+        if(formItems[item].value) {
+            const key = formItems[item].name
+            if (key === 'title') {
+                Item[key] = formItems[item].value;
+                return;
+            }
+            if (key === 'year') {
+                Item[key] = Number(formItems[item].value);
+                return;
+            }
+            info[key] = formItems[item].value;
+            return;
+        }
+        return;
+    });
+    params["Key"] = Item;
+    params["UpdateExpression"] = `
+        set info.rating = :r,
+            info.genre = :g,
+            info.plot = :p,
+            info.director = :d
+        `;
+    params["ExpressionAttributeValues"] = {
+        ":r" : info.rating,
+        ":g" : info.genre,
+        ":p" : info.plot,
+        ":d" : info.director
+    };
+    params["ReturnValues"] = "UPDATED_NEW";
+
+    console.log("params", params);
+    docClient.update(params, function(err, data) {
+        console.log("data", data);
+        if(err) {
+            document.getElementById('textarea').innerHTML = "Unable to update item: " + "\n" + JSON.stringify(err, undefined, 2);
+        } else {
+            document.getElementById('textarea').innerHTML = "UpdateItem succeeded: " + "\n" + JSON.stringify(data, undefined, 2);
+            formatForm(data);
+        }
+    });
+}
+
+function formatForm(data) {
+    const formItems = document.getElementById('movie-info').children;
+    const items = Object.keys(formItems);
+    const check = data["Attributes"] ? Object.keys(data["Attributes"]).length > 0 : false;
+    console.log("check", check);
+    const info = check ? Object.assign({}, data["Attributes"].info) 
+                                        : Object.assign({}, data.Item.info);
+    const spread = check ? {} : {
+            title: data.Item.title,
+            year: data.Item.year
+    };
+    const merge = check ? Object.assign({}, info)
+                                     : Object.assign({}, info, spread);
+    items.forEach((item) => {
+        const field = formItems[item].name;
+        if(check) {
+            if (field === "title" || field === "year") {
+                return;
+            }
+            formItems[field].value = merge[field];
+        } else {
+            formItems[field].value = merge[field];
+        }
+    });
 }
